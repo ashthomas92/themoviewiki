@@ -4,7 +4,7 @@ Search a database full of information on thousands of movies
 
 ## How was this built?
 
-The movie wiki is a React app that uses data from the [OMDb API](https://www.omdbapi.com/), it's still a WIP though
+The Movie Wiki is a React app that uses data from the [OMDb API](https://www.omdbapi.com/). It's still a work in progress at the moment.
 
 ## Is there a live version I can try out?
 
