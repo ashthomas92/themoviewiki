@@ -1,0 +1,103 @@
+:root {
+  --bg: #2E282A;
+  --blue: #4285F4;
+  --red: #DB4437;
+  --yellow: #F4B400;
+  --green: #0F9D58;
+}
+
+body {
+  background-color: var(--bg);
+}
+
+.App {
+  text-align: center;
+  font-family: 'Barlow Semi Condensed', sans-serif;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle, rgba(46,40,42,1) 50%, rgba(0,0,0,0.5) 100%);
+
+  user-select: none;
+}
+
+.App-window {
+
+  height: 90vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 1vmin);
+  color: white;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.App-window h1 {
+  margin: 0;
+  padding: 0 0 5px;
+  border-bottom: 1px solid var(--red);
+  text-transform: uppercase;
+}
+
+.App-window h1 svg {
+  margin: 0 20px;
+}
+
+.App-window p {
+  margin: 5px 0 50px;
+}
+
+#Search-results {
+  display: none;
+}
+
+input, button {
+  outline: none !important;
+}
+
+.Splash-search input[type=text] {
+  padding: 16px 22px;
+  border: none;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  font-size: 0.8em;
+  background: rgba(255,255,255,0.9);
+  transition: all 0.3s;
+  width: calc(190px + 4vw);
+}
+
+.Splash-search input[type=text]:hover,
+.Splash-search input[type=text]:focus {
+  background: rgba(255,255,255,1);
+}
+
+.Splash-search button[type=submit] {
+  font-size: 0.8em;
+  padding: 16px 22px;
+  border: none;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  margin-top: 20px;
+  background: var(--blue);
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s;
+  opacity: 0.95;
+  font-weight: bold;
+}
+
+.Splash-search button[type=submit]:hover {
+  opacity: 1;
+}
+
+/* Responsive stuff */
+
+@media all and (max-width: 768px) {
+  .Splash-search input[type=text],
+  .Splash-search button[type=submit] {
+    padding: 10px 12px;
+  }
+}
