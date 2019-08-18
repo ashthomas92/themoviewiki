@@ -8,21 +8,20 @@
 
 body {
   background-color: var(--bg);
+  max-height: 100vh;
+  overflow: hidden;
+  font-family: 'Barlow Semi Condensed', sans-serif;
 }
 
 .App {
   text-align: center;
-  font-family: 'Barlow Semi Condensed', sans-serif;
   width: 100vw;
   height: 100vh;
-  background: radial-gradient(circle, rgba(46,40,42,1) 50%, rgba(0,0,0,0.5) 100%);
-
   user-select: none;
 }
 
 .App-window {
-
-  height: 90vh;
+  height: 100vh;
   width: 100vw;
   display: flex;
   flex-direction: column;
@@ -31,8 +30,15 @@ body {
   font-size: calc(10px + 1vmin);
   color: white;
   position: absolute;
-  top: 0;
+  top: 100vh;
   left: 0;
+  background: radial-gradient(circle, rgba(46,40,42,1) 50%, rgba(0,0,0,0.5) 100%);
+  transition: all 0.5s;
+  overflow: scroll;
+}
+
+.App-window.visible {
+  top: 0;
 }
 
 .App-window h1 {
@@ -50,8 +56,69 @@ body {
   margin: 5px 0 50px;
 }
 
+.Close-window {
+  position: fixed;
+  top: 10px;
+  right: -45px;
+  transition: all 0.5s;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 3px;
+}
+
+.visible .Close-window {
+  right: 18px;
+}
+
 #Search-results {
-  display: none;
+  display: block;
+}
+
+#Search-results h2 {
+  margin-top: 16px;
+}
+
+.Search-result {
+  border-top: 1px solid rgba(255,255,255,0.2);
+  cursor: pointer;
+}
+
+.Search-result:last-of-type {
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.Search-result:nth-of-type(odd) {
+  background: rgba(255,255,255,0.02);
+}
+
+.Search-result h3 {
+  margin-top: 16px;
+  margin-bottom: 0;
+}
+
+.Search-result p {
+  margin-top: 5px;
+  padding-bottom: 20px;
+  margin-bottom: 0;
+}
+
+#Search-results-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+}
+
+.Search-page {
+  cursor: pointer;
+  background: rgba(255,255,255,0.1);
+  width: 30px;
+  height: 30px;
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 15px 3px;
 }
 
 input, button {
