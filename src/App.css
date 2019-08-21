@@ -33,23 +33,25 @@ body {
   position: absolute;
   top: 100vh;
   left: 0;
-  background: radial-gradient(circle, rgba(46,40,42,1) 50%, rgba(0,0,0,0.5) 100%);
+  background: radial-gradient(circle, rgba(46,40,42,1) 50%, rgba(23,20,21,1) 100%);
   transition: all 0.5s;
   overflow: auto;
+  padding: 10vh 10vw;
+  box-sizing: border-box;
 }
 
 .App-window.visible {
   top: 0;
 }
 
-.App-window h1 {
+#Splash h1 {
   margin: 0;
   padding: 0 0 5px;
   border-bottom: 1px solid var(--red);
   text-transform: uppercase;
 }
 
-.App-window h1 svg {
+#Splash h1 svg {
   margin: 0 20px;
 }
 
@@ -59,8 +61,8 @@ body {
 
 .Close-window {
   position: fixed;
-  top: 10px;
-  right: -45px;
+  right: 15px;
+  top: -45px;
   transition: all 0.5s;
   cursor: pointer;
   padding: 5px;
@@ -68,11 +70,12 @@ body {
 }
 
 .visible .Close-window {
-  right: 18px;
+  top: 15px;
 }
 
 #Search-results {
   display: block;
+  padding: 0;
 }
 
 #Search-results h2 {
@@ -162,11 +165,88 @@ input, button {
   opacity: 1;
 }
 
+.Movie-inner-wrapper {
+  min-width: 90vw;
+}
+
+.Movie-meta ul {
+  list-style: none;
+  margin: 0;
+}
+
+.Movie-header .poster {
+  width: 90vw;
+  max-width: 300px;
+  transform: translateZ(45);
+  float: right;
+  margin-left: 2vw;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.5);
+  border: 10px solid #111;
+}
+
+.Movie-header {
+  background: rgba(255,255,255,0.2);
+  padding: 10px 10px 1px 30px;
+  text-align: right;
+}
+
+.Movie-header h1 {
+  border-bottom: 1px solid var(--red);
+  padding-bottom: 5px;
+  margin-bottom: 0;
+  text-transform: uppercase;
+}
+
+.Movie-header h2 {
+  margin-top: 5px;
+}
+
+.Movie-meta ul {
+  padding: 30px 0 0;
+}
+
+.Movie-meta ul li {
+  text-align: left;
+  min-height: 32px;
+  margin-bottom: 20px;
+  line-height: 1.3em;
+}
+
+.Movie-meta ul li h3 {
+  border-bottom: 1px solid var(--blue);
+  display: inline-block;
+  padding: 0 16px 0 5px;
+  border-bottom-right-radius: 15px;
+  margin: -5px 1vw 0px 0;
+
+}
+
+.Movie-meta ul li h3:after {
+    content: "➤";
+    display: inline-block;
+    width: 0;
+    height: 0;
+    color: var(--blue);
+    position: relative;
+    top: calc(7.5px + 0.425vh);
+    transform: rotate(-30deg);
+    font-weight: 100;
+    left: calc(3px - 0.2vw);
+}
+
 /* Responsive stuff */
 
 @media all and (max-width: 768px) {
   .Splash-search input[type=text],
   .Splash-search button[type=submit] {
     padding: 10px 12px;
+  }
+  .Movie-header,
+  .Movie-meta ul li {
+    text-align: center;
+  }
+  .Movie-header .poster {
+    float: none;
+    padding: 0;
   }
 }

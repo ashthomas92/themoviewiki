@@ -17,6 +17,7 @@ function capitalizeFirstLetter(string) {
 }
 
 const API_Search = 'http://www.omdbapi.com/?apikey=b8353182&s=';
+const API_ID = 'http://www.omdbapi.com/?apikey=b8353182&i=';
 
 class App extends Component {
 
@@ -27,7 +28,8 @@ class App extends Component {
       searchQuery: '',
       searchResults: [],
       totalSearchResults: 0,
-      pagesHtml: ''
+      pagesHtml: '',
+      movieInfo: '',
     };
 
     this.searchSubmit = this.searchSubmit.bind(this);
@@ -50,8 +52,22 @@ class App extends Component {
     document.getElementById('Search-results').scrollTop = 0;
   }
 
-  showMovieInfo(){
-    console.log('show movie info');
+  showMovieInfo(event){
+    var et = event.target;
+    var nn = et.nodeName;
+    var id = null;
+    if (nn==='H3'||nn==='P'){
+      id = et.parentElement.getAttribute('id');
+    } else {
+      id = et.getAttribute('id');
+    }
+    fetch(API_ID+id)
+      .then(response => response.json())
+      .then(response => this.setState({movieInfo: [response]}));
+      console.log(this.state.movieInfo);
+    document.getElementById('Movie-info').scrollTop = 0;
+    document.getElementById('Search-results').classList.remove('visible');
+    document.getElementById('Movie-info').classList.add('visible');
   }
 
   renderSearchResults(){
@@ -77,6 +93,7 @@ class App extends Component {
   }
 
   closeWindow(event){
+    document.getElementById('Search-results').classList.add('visible');
     var node = event.target.nodeName;
     if (node==='svg'){
       event.target.parentElement.parentElement.classList.remove('visible');
@@ -88,7 +105,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <header className="App-window visible">
+        <header className="App-window visible" id="Splash">
           <h1><FontAwesomeIcon icon="film" /> The Movie Wiki <FontAwesomeIcon icon="film" /></h1>
           <p>www.themovie.wiki</p>
           <form className="Splash-search">
@@ -118,6 +135,34 @@ class App extends Component {
             <div id="Search-results-next" className="Search-page">
               <FontAwesomeIcon icon="caret-right" />
             </div>
+          </div>
+        </div>
+        <div className="App-window" id="Movie-info">
+          <div className="Close-window" onClick={this.closeWindow}>
+            <FontAwesomeIcon className="fa-2x" icon="times" />
+          </div>
+          <div className="Movie-inner-wrapper">
+            {this.state.movieInfo && this.state.movieInfo.map((item,index) => {
+                return <div key={index}> <div className="Movie-header">
+                    <img src={item.Poster} className="poster" alt={item.Title} /><h1>{item.Title}</h1><h2>({capitalizeFirstLetter(item.Type)} - {item.Year})</h2><p>{item.Plot}</p>
+                  </div>
+                  <ul className="Movie-ratings">
+
+                  </ul>
+                  <div className="Movie-meta">
+                    <ul>
+                      <li><h3>Director</h3> {item.Director}</li>
+                      <li><h3>Written by</h3> {item.Writer.replace(/ by\)/g,')')}</li>
+                      <li><h3>Main Actors</h3> {item.Actors}</li>
+                      <li><h3>Genre</h3> {item.Genre}</li>
+                      <li><h3>Released</h3> {item.Released}</li>
+                      <li><h3>Runtime</h3> {item.Runtime}</li>
+                      <li><h3>Genre</h3> {item.Genre}</li>
+                      <li><h3>Awards</h3> {item.Awards}</li>
+                    </ul>
+                  </div>
+                </div>
+            },this)}
           </div>
         </div>
       </div>
