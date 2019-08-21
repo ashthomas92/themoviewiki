@@ -13,7 +13,7 @@ library.add(
 )
 
 function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 const API_Search = 'http://www.omdbapi.com/?apikey=b8353182&s=';
@@ -25,8 +25,7 @@ class App extends Component {
 
     this.state = {
       searchQuery: '',
-      searchResults: null,
-      searchResultsHtml: '',
+      searchResults: [],
       totalSearchResults: 0,
       pagesHtml: ''
     };
@@ -35,6 +34,7 @@ class App extends Component {
     this.closeWindow = this.closeWindow.bind(this);
     this.renderSearchResults = this.renderSearchResults.bind(this);
     this.paginateSearchResults = this.paginateSearchResults.bind(this);
+    this.showMovieInfo = this.showMovieInfo.bind(this);
 
   }
 
@@ -50,22 +50,24 @@ class App extends Component {
     document.getElementById('Search-results').scrollTop = 0;
   }
 
+  showMovieInfo(){
+    console.log('show movie info');
+  }
+
   renderSearchResults(){
     if (this.state.searchResults.Search){
-      document.getElementById('Search-results').classList.add('visible');
       console.log(this.state.searchResults.Search.length + ' of ' + this.state.searchResults.totalResults + ' Results:');
       for (var i = 0; i < this.state.searchResults.Search.length; i++){
         var thisResult = this.state.searchResults.Search[i]
         console.log(thisResult);
         this.setState({ totalSearchResults: this.state.searchResults.totalResults });
-        this.setState({ searchResultsHtml: this.state.searchResultsHtml + '<div class="Search-result"><h3>' + thisResult.Title + '</h3><p>('  + capitalizeFirstLetter(thisResult.Type) + ' - ' + thisResult.Year + ')</p></div>' });
       }
     } else {
       console.log('No results');
-      this.setState({ searchResultsHtml: 'No results' });
+      this.setState({ totalSearchResults: 0 });
     }
-    console.log(this.state.searchResultsHtml);
     this.paginateSearchResults();
+    document.getElementById('Search-results').classList.add('visible');
   }
 
   paginateSearchResults(){
@@ -90,7 +92,7 @@ class App extends Component {
           <h1><FontAwesomeIcon icon="film" /> The Movie Wiki <FontAwesomeIcon icon="film" /></h1>
           <p>www.themovie.wiki</p>
           <form className="Splash-search">
-            <input type="text" id="Search-input" autocomplete="off" placeholder="Search movies, series & episodes..." aria-label="Search input"/>
+            <input type="text" id="Search-input" autoComplete="off" placeholder="Search movies, series & games..." aria-label="Search input"/>
             <button type="submit" aria-label="Search submit button" onClick={this.searchSubmit}>
               <FontAwesomeIcon icon="search" />
             </button>
@@ -101,15 +103,19 @@ class App extends Component {
             <FontAwesomeIcon className="fa-2x" icon="times" />
           </div>
           <h2>{this.state.totalSearchResults} results for <em>{this.state.searchQuery}</em></h2>
-          <div id="Search-results-wrapper" dangerouslySetInnerHTML={{__html: this.state.searchResultsHtml}}></div>
+          <div id="Search-results-wrapper">
+            {this.state.searchResults.Search && this.state.searchResults.Search.map(function(item, index){
+              return <div className="Search-result" onClick={this.showMovieInfo} id={item.imdbID} key={item.imdbID}><h3>{item.Title}</h3><p>({ capitalizeFirstLetter(item.Type) } - { item.Year })</p></div>
+            },this)}
+          </div>
           <div id="Search-results-pagination">
-            <div id="Search-results-prev" class="Search-page">
+            <div id="Search-results-prev" className="Search-page">
               <FontAwesomeIcon icon="caret-left" />
             </div>
             <div id="Search-results-pages">
               <h2>{this.state.pagesHtml}</h2>
             </div>
-            <div id="Search-results-next" class="Search-page">
+            <div id="Search-results-next" className="Search-page">
               <FontAwesomeIcon icon="caret-right" />
             </div>
           </div>
