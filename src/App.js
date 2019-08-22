@@ -3,13 +3,15 @@ import './App.css';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faFilm, faTimes, faCaretLeft, faCaretRight } from '@fortawesome/free-solid-svg-icons'
+import { fab, faGithub } from '@fortawesome/free-brands-svg-icons'
 
 library.add(
   faSearch,
   faFilm,
   faTimes,
   faCaretLeft,
-  faCaretRight
+  faCaretRight,
+  faGithub
 )
 
 function capitalizeFirstLetter(string) {
@@ -37,6 +39,7 @@ class App extends Component {
     this.renderSearchResults = this.renderSearchResults.bind(this);
     this.paginateSearchResults = this.paginateSearchResults.bind(this);
     this.showMovieInfo = this.showMovieInfo.bind(this);
+    this.openAbout = this.openAbout.bind(this);
 
   }
 
@@ -66,7 +69,7 @@ class App extends Component {
       .then(response => this.setState({movieInfo: [response]}));
       console.log(this.state.movieInfo);
     document.getElementById('Movie-info').scrollTop = 0;
-    document.getElementById('Search-results').classList.remove('visible');
+    // document.getElementById('Search-results').classList.remove('visible');
     document.getElementById('Movie-info').classList.add('visible');
   }
 
@@ -86,6 +89,10 @@ class App extends Component {
     document.getElementById('Search-results').classList.add('visible');
   }
 
+  openAbout(){
+    document.getElementById('About-page').classList.add('visible');
+  }
+
   paginateSearchResults(){
     var pages = Math.ceil(this.state.totalSearchResults/10);
     var pagesHtml = `Page 1 of ${pages}`;
@@ -93,7 +100,7 @@ class App extends Component {
   }
 
   closeWindow(event){
-    document.getElementById('Search-results').classList.add('visible');
+    // document.getElementById('Search-results').classList.add('visible');
     var node = event.target.nodeName;
     if (node==='svg'){
       event.target.parentElement.parentElement.classList.remove('visible');
@@ -114,6 +121,9 @@ class App extends Component {
               <FontAwesomeIcon icon="search" />
             </button>
           </form>
+          <div className="About-link" onClick={this.openAbout}>
+            <span>about</span>
+          </div>
         </header>
         <div className="App-window" id="Search-results">
           <div className="Close-window" onClick={this.closeWindow}>
@@ -164,6 +174,13 @@ class App extends Component {
                 </div>
             },this)}
           </div>
+        </div>
+        <div className="App-window" id="About-page">
+          <div className="Close-window" onClick={this.closeWindow}>
+            <FontAwesomeIcon className="fa-2x" icon="times" />
+          </div>
+          <p>The Movie Wiki is a pet project by Ash Thomas at <a href="https://southdevondigital.com" target="_blank">South Devon Digital</a>.<br />It's a React App that uses the <a href="https://ombdapi.com" target="_blank">Open Movie Database API</a>.</p>
+          <p><FontAwesomeIcon icon={['fab','github']} /> <a href="https://github.com/ashthomas92/themoviewiki" target="_blank"> View the source code on Github</a></p>
         </div>
       </div>
     );
