@@ -4,11 +4,11 @@ The Movie Wiki allows you to search a database full of information on thousands 
 
 ## How was this built?
 
-It's a React app that uses data from the [OMDb API](https://www.omdbapi.com/). It's still a work in progress at the moment though.
+It's a React app that uses data from the <a href="https://www.omdbapi.com/" target="_blank">OMDb API</a>. It's still a work in progress at the moment though.
 
 ## Is there a live version I can try out?
 
-Not yet, but soon it'll be available at [https://themovie.wiki](https://themovie.wiki)
+Not yet, but soon it'll be available at <a href="https://themovie.wiki" target="_blank">https://themovie.wiki</a>
 
 ## Why are you making this?
 
