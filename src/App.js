@@ -3,7 +3,7 @@ import './App.css';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faFilm, faTimes, faCaretLeft, faCaretRight } from '@fortawesome/free-solid-svg-icons'
-import { fab, faGithub } from '@fortawesome/free-brands-svg-icons'
+import { faGithub } from '@fortawesome/free-brands-svg-icons'
 
 library.add(
   faSearch,
@@ -30,6 +30,8 @@ class App extends Component {
       searchQuery: '',
       searchResults: [],
       totalSearchResults: 0,
+      totalPages: 1,
+      currentPage: 1,
       pagesHtml: '',
       movieInfo: '',
     };
@@ -40,19 +42,21 @@ class App extends Component {
     this.paginateSearchResults = this.paginateSearchResults.bind(this);
     this.showMovieInfo = this.showMovieInfo.bind(this);
     this.openAbout = this.openAbout.bind(this);
+    this.prevSearchPage = this.prevSearchPage.bind(this);
+    this.nextSearchPage = this.nextSearchPage.bind(this);
 
   }
 
   searchSubmit(event){
     event.preventDefault();
     var query = document.getElementById('Search-input').value;
-    this.setState({ searchQuery: query });
-    console.log('Searching for ' + query + ' (' + API_Search + query + ')');
+    this.setState({ searchQuery: query, currentPage: 1 });
     fetch(API_Search+query)
       .then(response => response.json())
       .then(response => this.setState({ searchResults: response }))
       .then(response => this.renderSearchResults());
     document.getElementById('Search-results').scrollTop = 0;
+    document.getElementById('Search-results-prev').classList.add('disabled');
   }
 
   showMovieInfo(event){
@@ -67,22 +71,16 @@ class App extends Component {
     fetch(API_ID+id)
       .then(response => response.json())
       .then(response => this.setState({movieInfo: [response]}));
-      console.log(this.state.movieInfo);
     document.getElementById('Movie-info').scrollTop = 0;
-    // document.getElementById('Search-results').classList.remove('visible');
     document.getElementById('Movie-info').classList.add('visible');
   }
 
   renderSearchResults(){
     if (this.state.searchResults.Search){
-      console.log(this.state.searchResults.Search.length + ' of ' + this.state.searchResults.totalResults + ' Results:');
       for (var i = 0; i < this.state.searchResults.Search.length; i++){
-        var thisResult = this.state.searchResults.Search[i]
-        console.log(thisResult);
         this.setState({ totalSearchResults: this.state.searchResults.totalResults });
       }
     } else {
-      console.log('No results');
       this.setState({ totalSearchResults: 0 });
     }
     this.paginateSearchResults();
@@ -95,17 +93,58 @@ class App extends Component {
 
   paginateSearchResults(){
     var pages = Math.ceil(this.state.totalSearchResults/10);
-    var pagesHtml = `Page 1 of ${pages}`;
-    this.setState({ pagesHtml: pagesHtml });
+    var pagesHtml = `Page ${this.state.currentPage} of ${pages}`;
+    this.setState({ pagesHtml: pagesHtml, totalPages: pages });
   }
 
   closeWindow(event){
-    // document.getElementById('Search-results').classList.add('visible');
     var node = event.target.nodeName;
+    var parent = '';
     if (node==='svg'){
       event.target.parentElement.parentElement.classList.remove('visible');
+      parent = event.target.parentElement.parentElement.id;
     } else if (node==='path') {
       event.target.parentElement.parentElement.parentElement.classList.remove('visible');
+      parent = event.target.parentElement.parentElement.parentElement.id;
+    }
+    if (parent==='Search-results'){
+      var searchInput = document.getElementById('Search-input');
+      searchInput.focus();
+      searchInput.value = '';
+    }
+  }
+
+  prevSearchPage(){
+    var searchPage = this.state.currentPage;
+    if (searchPage>1){
+      this.setState({ currentPage: searchPage-1 });
+      fetch(API_Search+this.state.searchQuery+'&page='+(this.state.currentPage-1))
+        .then(response => response.json())
+        .then(response => this.setState({ searchResults: response }))
+        .then(response => this.renderSearchResults());
+      document.getElementById('Search-results').scrollTop = 0;
+      this.paginateSearchResults();
+      document.getElementById('Search-results-next').classList.remove('disabled');
+      if (searchPage===2) {
+        document.getElementById('Search-results-prev').classList.add('disabled');
+      }
+    }
+  }
+
+  nextSearchPage(){
+    var searchPage = this.state.currentPage;
+    if (searchPage<this.state.totalPages){
+      this.setState({ currentPage: searchPage+1 });
+      fetch(API_Search+this.state.searchQuery+'&page='+(this.state.currentPage+1))
+        .then(response => response.json())
+        .then(response => this.setState({ searchResults: response }))
+        .then(response => this.renderSearchResults());
+      document.getElementById('Search-results').scrollTop = 0;
+      this.paginateSearchResults();
+      document.getElementById('Search-results-prev').classList.remove('disabled');
+      if ((searchPage+1)===this.state.totalPages) {
+        document.getElementById('Search-results-next').classList.add('disabled');
+      }
     }
   }
 
@@ -136,13 +175,13 @@ class App extends Component {
             },this)}
           </div>
           <div id="Search-results-pagination">
-            <div id="Search-results-prev" className="Search-page">
+            <div id="Search-results-prev" className="Search-page disabled" onClick={this.prevSearchPage}>
               <FontAwesomeIcon icon="caret-left" />
             </div>
             <div id="Search-results-pages">
               <h2>{this.state.pagesHtml}</h2>
             </div>
-            <div id="Search-results-next" className="Search-page">
+            <div id="Search-results-next" className="Search-page" onClick={this.nextSearchPage}>
               <FontAwesomeIcon icon="caret-right" />
             </div>
           </div>
@@ -179,8 +218,10 @@ class App extends Component {
           <div className="Close-window" onClick={this.closeWindow}>
             <FontAwesomeIcon className="fa-2x" icon="times" />
           </div>
-          <p>The Movie Wiki is a pet project by Ash Thomas at <a href="https://southdevondigital.com" target="_blank">South Devon Digital</a>.<br />It's a React App that uses the <a href="https://ombdapi.com" target="_blank">Open Movie Database API</a>.</p>
-          <p><FontAwesomeIcon icon={['fab','github']} /> <a href="https://github.com/ashthomas92/themoviewiki" target="_blank"> View the source code on Github</a></p>
+          <p>The Movie Wiki is a pet project by Ash Thomas at <a href="https://southdevondigital.com" target="_blank" rel="noopener noreferrer">South Devon Digital</a>.
+            <br /><br />
+            It's a React App that uses the <a href="https://ombdapi.com" target="_blank" rel="noopener noreferrer">Open Movie Database API</a>.</p>
+          <p><FontAwesomeIcon icon={['fab','github']} /> <a href="https://github.com/ashthomas92/themoviewiki" target="_blank" rel="noopener noreferrer"> View the source code on Github</a></p>
         </div>
       </div>
     );

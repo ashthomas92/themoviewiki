@@ -38,6 +38,7 @@ body {
   overflow: auto;
   padding: 10vh 10vw;
   box-sizing: border-box;
+  scroll-behavior: smooth;
 }
 
 .App-window.visible {
@@ -89,7 +90,7 @@ body {
 .Close-window {
   position: fixed;
   right: 15px;
-  top: -45px;
+  top: 100vh;
   transition: all 0.5s;
   cursor: pointer;
   padding: 5px;
@@ -151,6 +152,16 @@ body {
   justify-content: center;
   align-items: center;
   margin: 0 15px 3px;
+  opacity: 0.9;
+  transition: opacity 0.3s;
+}
+
+.Search-page:not('.disabled'):hover {
+  opacity: 1;
+}
+
+.Search-page.disabled {
+  opacity: 0.5;
 }
 
 input, button {
@@ -166,6 +177,7 @@ input, button {
   background: rgba(255,255,255,0.9);
   transition: all 0.3s;
   width: calc(190px + 4vw);
+  max-width: 220px;
 }
 
 .Splash-search input[type=text]:hover,
@@ -193,7 +205,8 @@ input, button {
 }
 
 .Movie-inner-wrapper {
-  min-width: 90vw;
+  width: 90vw;
+  max-width: 1200px;
 }
 
 .Movie-meta ul {
@@ -264,9 +277,30 @@ input, button {
 /* Responsive stuff */
 
 @media all and (max-width: 768px) {
+  .visible .Close-window {
+    top: 10px;
+  }
+  #Movie-info {
+    padding-top: 3vh;
+  }
+  .Splash-search input[type=text] {
+    width: 50vw;
+  }
   .Splash-search input[type=text],
   .Splash-search button[type=submit] {
     padding: 10px 12px;
+  }
+  #Splash h1 {
+    font-size: calc(16px + 1vw);
+  }
+  #Splash h1 svg {
+    margin: 0 10px;
+  }
+  .Movie-inner-wrapper {
+    min-height: 1px;
+  }
+  .Movie-header {
+    padding: 10px;
   }
   .Movie-header,
   .Movie-meta ul li {
@@ -275,5 +309,10 @@ input, button {
   .Movie-header .poster {
     float: none;
     padding: 0;
+    margin: 0 auto;
+    width: 75vw;
+  }
+  .Movie-header p {
+    margin-bottom: 10px;
   }
 }
