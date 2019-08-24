@@ -57,6 +57,7 @@ class App extends Component {
       .then(response => this.renderSearchResults());
     document.getElementById('Search-results').scrollTop = 0;
     document.getElementById('Search-results-prev').classList.add('disabled');
+    document.getElementById('Search-input').blur();
   }
 
   showMovieInfo(event){
