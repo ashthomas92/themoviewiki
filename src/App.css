@@ -152,16 +152,16 @@ body {
   justify-content: center;
   align-items: center;
   margin: 0 15px 3px;
-  opacity: 0.9;
+  opacity: 0.6;
   transition: opacity 0.3s;
 }
 
-.Search-page:not('.disabled'):hover {
+.Search-page:not(.disabled):hover {
   opacity: 1;
 }
 
 .Search-page.disabled {
-  opacity: 0.5;
+  opacity: 0.2;
 }
 
 input, button {
@@ -207,11 +207,33 @@ input, button {
 .Movie-inner-wrapper {
   width: 90vw;
   max-width: 1200px;
+  min-height: 1px;
+}
+
+#Movie-info {
+  padding-top: 5vh;
 }
 
 .Movie-meta ul {
   list-style: none;
   margin: 0;
+}
+
+.Movie-ratings {
+  margin: 30px 0 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+
+.Movie-ratings li {
+  margin: 5px 0;
+}
+
+.Movie-ratings li svg {
+  color: var(--yellow);
+  margin: 0 5px 2px;
+  font-size: 0.7em;
 }
 
 .Movie-header .poster {
@@ -222,6 +244,12 @@ input, button {
   margin-left: 2vw;
   box-shadow: 0 3px 15px rgba(0,0,0,0.5);
   border: 10px solid #111;
+  background: #fff;
+  background-image: url('placeholder.jpeg');
+  background-position: center;
+  min-height: 180px;
+  color: rgba(0,0,0,0);
+  transition: all 0.3s;
 }
 
 .Movie-header {
@@ -280,9 +308,6 @@ input, button {
   .visible .Close-window {
     top: 10px;
   }
-  #Movie-info {
-    padding-top: 3vh;
-  }
   .Splash-search input[type=text] {
     width: 50vw;
   }
@@ -296,11 +321,9 @@ input, button {
   #Splash h1 svg {
     margin: 0 10px;
   }
-  .Movie-inner-wrapper {
-    min-height: 1px;
-  }
+
   .Movie-header {
-    padding: 10px;
+    padding: 4.5vw 10px 10px;
   }
   .Movie-header,
   .Movie-meta ul li {
@@ -311,8 +334,13 @@ input, button {
     padding: 0;
     margin: 0 auto;
     width: 75vw;
+    min-height: 180px;
+    display: inline-block;
   }
   .Movie-header p {
     margin-bottom: 10px;
+  }
+  .Movie-ratings {
+    text-align: center;
   }
 }

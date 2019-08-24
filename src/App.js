@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSearch, faFilm, faTimes, faCaretLeft, faCaretRight } from '@fortawesome/free-solid-svg-icons'
+import { faSearch, faFilm, faTimes, faCaretLeft, faCaretRight, faStar } from '@fortawesome/free-solid-svg-icons'
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 
 library.add(
@@ -11,7 +11,8 @@ library.add(
   faTimes,
   faCaretLeft,
   faCaretRight,
-  faGithub
+  faGithub,
+  faStar
 )
 
 function capitalizeFirstLetter(string) {
@@ -19,9 +20,21 @@ function capitalizeFirstLetter(string) {
 }
 
 const API_Search = 'http://www.omdbapi.com/?apikey=b8353182&s=';
-const API_ID = 'http://www.omdbapi.com/?apikey=b8353182&i=';
+const API_ID = 'http://www.omdbapi.com/?apikey=b8353182&plot=full&i=';
+
+
+
+
 
 class App extends Component {
+
+  componentDidMount() {
+    window.addEventListener('load', this.handleLoad);
+  }
+
+  handleLoad() {
+    document.getElementById('Search-input').focus();
+  }
 
   constructor(props) {
     super(props);
@@ -34,6 +47,7 @@ class App extends Component {
       currentPage: 1,
       pagesHtml: '',
       movieInfo: '',
+      moveRatings: '',
     };
 
     this.searchSubmit = this.searchSubmit.bind(this);
@@ -61,6 +75,7 @@ class App extends Component {
   }
 
   showMovieInfo(event){
+    this.setState({movieInfo: []});
     var et = event.target;
     var nn = et.nodeName;
     var id = null;
@@ -71,7 +86,7 @@ class App extends Component {
     }
     fetch(API_ID+id)
       .then(response => response.json())
-      .then(response => this.setState({movieInfo: [response]}));
+      .then(response => this.setState({movieInfo: [response], movieRatings: response.Ratings }));
     document.getElementById('Movie-info').scrollTop = 0;
     document.getElementById('Movie-info').classList.add('visible');
   }
@@ -96,6 +111,11 @@ class App extends Component {
     var pages = Math.ceil(this.state.totalSearchResults/10);
     var pagesHtml = `Page ${this.state.currentPage} of ${pages}`;
     this.setState({ pagesHtml: pagesHtml, totalPages: pages });
+    if (pages<=1){
+      document.getElementById('Search-results-next').classList.add('disabled');
+    } else if (this.state.currentPage<pages) {
+      document.getElementById('Search-results-next').classList.remove('disabled');
+    }
   }
 
   closeWindow(event){
@@ -139,11 +159,15 @@ class App extends Component {
       fetch(API_Search+this.state.searchQuery+'&page='+(this.state.currentPage+1))
         .then(response => response.json())
         .then(response => this.setState({ searchResults: response }))
-        .then(response => this.renderSearchResults());
-      document.getElementById('Search-results').scrollTop = 0;
+        .then(response => this.renderSearchResults())
+        .then(document.getElementById('Search-results').scrollTop = 0);
+
       this.paginateSearchResults();
       document.getElementById('Search-results-prev').classList.remove('disabled');
+      console.log(searchPage+1);
+      console.log(this.state.totalPages);
       if ((searchPage+1)===this.state.totalPages) {
+        console.log('match');
         document.getElementById('Search-results-next').classList.add('disabled');
       }
     }
@@ -171,9 +195,9 @@ class App extends Component {
           </div>
           <h2>{this.state.totalSearchResults} results for <em>{this.state.searchQuery}</em></h2>
           <div id="Search-results-wrapper">
-            {this.state.searchResults.Search && this.state.searchResults.Search.map(function(item, index){
+            {this.state.searchResults.Search && this.state.searchResults.Search.map((item, index) => {
               return <div className="Search-result" onClick={this.showMovieInfo} id={item.imdbID} key={item.imdbID}><h3>{item.Title}</h3><p>({ capitalizeFirstLetter(item.Type) } - { item.Year })</p></div>
-            },this)}
+            })}
           </div>
           <div id="Search-results-pagination">
             <div id="Search-results-prev" className="Search-page disabled" onClick={this.prevSearchPage}>
@@ -197,7 +221,9 @@ class App extends Component {
                     <img src={item.Poster} className="poster" alt={item.Title} /><h1>{item.Title}</h1><h2>({capitalizeFirstLetter(item.Type)} - {item.Year})</h2><p>{item.Plot}</p>
                   </div>
                   <ul className="Movie-ratings">
-
+                    {this.state.movieRatings && this.state.movieRatings.map((item,index) => {
+                      return <li key={index}><FontAwesomeIcon icon="star" /> {item.Source}: {item.Value} <FontAwesomeIcon icon="star" /></li>
+                    })}
                   </ul>
                   <div className="Movie-meta">
                     <ul>
@@ -212,7 +238,7 @@ class App extends Component {
                     </ul>
                   </div>
                 </div>
-            },this)}
+            })}
           </div>
         </div>
         <div className="App-window" id="About-page">
