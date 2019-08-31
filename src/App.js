@@ -22,10 +22,6 @@ function capitalizeFirstLetter(string) {
 const API_Search = 'http://www.omdbapi.com/?apikey=b8353182&s=';
 const API_ID = 'http://www.omdbapi.com/?apikey=b8353182&plot=full&i=';
 
-
-
-
-
 class App extends Component {
 
   componentDidMount() {
@@ -64,7 +60,7 @@ class App extends Component {
   searchSubmit(event){
     event.preventDefault();
     var query = document.getElementById('Search-input').value;
-    this.setState({ searchQuery: query, currentPage: 1 });
+    this.setState({ searchQuery: query, currentPage: 1, searchResults: [] });
     fetch(API_Search+query)
       .then(response => response.json())
       .then(response => this.setState({ searchResults: response }))
@@ -108,13 +104,18 @@ class App extends Component {
   }
 
   paginateSearchResults(){
-    var pages = Math.ceil(this.state.totalSearchResults/10);
-    var pagesHtml = `Page ${this.state.currentPage} of ${pages}`;
-    this.setState({ pagesHtml: pagesHtml, totalPages: pages });
-    if (pages<=1){
+    if (this.state.totalSearchResults>0){
+      var pages = Math.ceil(this.state.totalSearchResults/10);
+      var pagesHtml = `Page ${this.state.currentPage} of ${pages}`;
+      this.setState({ pagesHtml: pagesHtml, totalPages: pages });
+      if (pages<=1){
+        document.getElementById('Search-results-next').classList.add('disabled');
+      } else if (this.state.currentPage<pages) {
+        document.getElementById('Search-results-next').classList.remove('disabled');
+      }
+    } else {
       document.getElementById('Search-results-next').classList.add('disabled');
-    } else if (this.state.currentPage<pages) {
-      document.getElementById('Search-results-next').classList.remove('disabled');
+      this.setState({ pagesHtml: 'No search results :(' });
     }
   }
 
@@ -136,6 +137,7 @@ class App extends Component {
   }
 
   prevSearchPage(){
+    this.setState({ searchResults: [] });
     var searchPage = this.state.currentPage;
     if (searchPage>1){
       this.setState({ currentPage: searchPage-1 });
@@ -153,6 +155,7 @@ class App extends Component {
   }
 
   nextSearchPage(){
+    this.setState({ searchResults: [] });
     var searchPage = this.state.currentPage;
     if (searchPage<this.state.totalPages){
       this.setState({ currentPage: searchPage+1 });
@@ -180,8 +183,8 @@ class App extends Component {
           <h1><FontAwesomeIcon icon="film" /> The Movie Wiki <FontAwesomeIcon icon="film" /></h1>
           <p>www.themovie.wiki</p>
           <form className="Splash-search">
-            <input type="text" id="Search-input" autoComplete="off" placeholder="Search movies, series & games..." aria-label="Search input"/>
-            <button type="submit" aria-label="Search submit button" onClick={this.searchSubmit}>
+            <input type="text" id="Search-input" autoComplete="off" placeholder="Search movies, series & games..." aria-label="Search input" title="Search input"/>
+            <button type="submit" aria-label="Search submit button" title="Search submit button" onClick={this.searchSubmit}>
               <FontAwesomeIcon icon="search" />
             </button>
           </form>
@@ -190,7 +193,7 @@ class App extends Component {
           </div>
         </header>
         <div className="App-window" id="Search-results">
-          <div className="Close-window" onClick={this.closeWindow}>
+          <div className="Close-window" title="Close window" aria-label="Close window"onClick={this.closeWindow}>
             <FontAwesomeIcon className="fa-2x" icon="times" />
           </div>
           <h2>{this.state.totalSearchResults} results for <em>{this.state.searchQuery}</em></h2>
@@ -200,19 +203,19 @@ class App extends Component {
             })}
           </div>
           <div id="Search-results-pagination">
-            <div id="Search-results-prev" className="Search-page disabled" onClick={this.prevSearchPage}>
+            <div id="Search-results-prev" className="Search-page disabled" title="Go to previous search results page" aria-label="Go to previous search results page" onClick={this.prevSearchPage}>
               <FontAwesomeIcon icon="caret-left" />
             </div>
             <div id="Search-results-pages">
               <h2>{this.state.pagesHtml}</h2>
             </div>
-            <div id="Search-results-next" className="Search-page" onClick={this.nextSearchPage}>
+            <div id="Search-results-next" className="Search-page" title="Go to next search results page" aria-label="Go to next search results page" onClick={this.nextSearchPage}>
               <FontAwesomeIcon icon="caret-right" />
             </div>
           </div>
         </div>
         <div className="App-window" id="Movie-info">
-          <div className="Close-window" onClick={this.closeWindow}>
+          <div className="Close-window" title="Close window" aria-label="Close window"onClick={this.closeWindow}>
             <FontAwesomeIcon className="fa-2x" icon="times" />
           </div>
           <div className="Movie-inner-wrapper">
@@ -227,14 +230,14 @@ class App extends Component {
                   </ul>
                   <div className="Movie-meta">
                     <ul>
-                      <li><h3>Director</h3> {item.Director}</li>
-                      <li><h3>Written by</h3> {item.Writer.replace(/ by\)/g,')')}</li>
-                      <li><h3>Main Actors</h3> {item.Actors}</li>
-                      <li><h3>Genre</h3> {item.Genre}</li>
-                      <li><h3>Released</h3> {item.Released}</li>
-                      <li><h3>Runtime</h3> {item.Runtime}</li>
-                      <li><h3>Genre</h3> {item.Genre}</li>
-                      <li><h3>Awards</h3> {item.Awards}</li>
+                      <li><h3>Director</h3><p>{item.Director}</p></li>
+                      <li><h3>Written by</h3><p>{item.Writer.replace(/ by\)/g,')')}</p></li>
+                      <li><h3>Main Actors</h3><p>{item.Actors}</p></li>
+                      <li><h3>Genre</h3><p>{item.Genre}</p></li>
+                      <li><h3>Released</h3><p>{item.Released}</p></li>
+                      <li><h3>Runtime</h3><p>{item.Runtime}</p></li>
+                      <li><h3>Genre</h3><p>{item.Genre}</p></li>
+                      <li><h3>Awards</h3><p>{item.Awards}</p></li>
                     </ul>
                   </div>
                 </div>
@@ -242,7 +245,7 @@ class App extends Component {
           </div>
         </div>
         <div className="App-window" id="About-page">
-          <div className="Close-window" onClick={this.closeWindow}>
+          <div className="Close-window" title="Close window" aria-label="Close window" onClick={this.closeWindow}>
             <FontAwesomeIcon className="fa-2x" icon="times" />
           </div>
           <p>The Movie Wiki is a pet project by Ash Thomas at <a href="https://southdevondigital.com" target="_blank" rel="noopener noreferrer">South Devon Digital</a>.

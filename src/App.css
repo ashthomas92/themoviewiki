@@ -113,7 +113,7 @@ body {
 .Search-result {
   border-top: 1px solid rgba(255,255,255,0.2);
   cursor: pointer;
-  padding: 0 1vw;
+  padding: 0 3vw;
 }
 
 .Search-result:last-of-type {
@@ -176,8 +176,8 @@ input, button {
   font-size: 0.8em;
   background: rgba(255,255,255,0.9);
   transition: all 0.3s;
-  width: calc(190px + 4vw);
-  max-width: 220px;
+  width: calc(190px + 5vw);
+  max-width: 240px;
 }
 
 .Splash-search input[type=text]:hover,
@@ -281,14 +281,17 @@ input, button {
 }
 
 .Movie-meta ul li h3 {
-  border-bottom: 1px solid var(--blue);
   display: inline-block;
-  padding: 0 16px 0 5px;
-  border-bottom-right-radius: 15px;
-  margin: -5px 1vw 0px 0;
-
+  border-bottom: 1px solid var(--blue);
+  padding: 5px 8px 8px 0;
+  margin: -5px 1vw 5px 0;
 }
 
+.Movie-meta ul li p {
+  padding: 5px 0 8px;
+  margin: 0;
+}
+/*
 .Movie-meta ul li h3:after {
     content: "➤";
     display: inline-block;
@@ -301,7 +304,7 @@ input, button {
     font-weight: 100;
     left: calc(3px - 0.2vw);
 }
-
+*/
 /* Responsive stuff */
 
 @media all and (max-width: 768px) {
@@ -321,13 +324,18 @@ input, button {
   #Splash h1 svg {
     margin: 0 10px;
   }
-
+  #Movie-info {
+    padding-top: 5vw;
+  }
   .Movie-header {
     padding: 4.5vw 10px 10px;
   }
   .Movie-header,
   .Movie-meta ul li {
     text-align: center;
+  }
+  .Movie-meta ul li h3 {
+    padding: 5px 8px 8px;
   }
   .Movie-header .poster {
     float: none;
