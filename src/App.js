@@ -60,14 +60,16 @@ class App extends Component {
   searchSubmit(event){
     event.preventDefault();
     var query = document.getElementById('Search-input').value;
-    this.setState({ searchQuery: query, currentPage: 1, searchResults: [] });
-    fetch(API_Search+query)
-      .then(response => response.json())
-      .then(response => this.setState({ searchResults: response }))
-      .then(response => this.renderSearchResults());
-    document.getElementById('Search-results').scrollTop = 0;
-    document.getElementById('Search-results-prev').classList.add('disabled');
-    document.getElementById('Search-input').blur();
+    if (query.length>0){
+      this.setState({ searchQuery: query, currentPage: 1, searchResults: [] });
+      fetch(API_Search+query)
+        .then(response => response.json())
+        .then(response => this.setState({ searchResults: response }))
+        .then(response => this.renderSearchResults());
+      document.getElementById('Search-results').scrollTop = 0;
+      document.getElementById('Search-results-prev').classList.add('disabled');
+      document.getElementById('Search-input').blur();
+    }
   }
 
   showMovieInfo(event){
