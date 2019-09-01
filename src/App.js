@@ -117,7 +117,7 @@ class App extends Component {
       }
     } else {
       document.getElementById('Search-results-next').classList.add('disabled');
-      this.setState({ pagesHtml: 'No search results :(' });
+      this.setState({ pagesHtml: 'We got nothing :(' });
     }
   }
 
