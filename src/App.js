@@ -139,9 +139,9 @@ class App extends Component {
   }
 
   prevSearchPage(){
-    this.setState({ searchResults: [] });
     var searchPage = this.state.currentPage;
     if (searchPage>1){
+      this.setState({ searchResults: [] });
       this.setState({ currentPage: searchPage-1 });
       fetch(API_Search+this.state.searchQuery+'&page='+(this.state.currentPage-1))
         .then(response => response.json())
@@ -157,9 +157,9 @@ class App extends Component {
   }
 
   nextSearchPage(){
-    this.setState({ searchResults: [] });
     var searchPage = this.state.currentPage;
     if (searchPage<this.state.totalPages){
+      this.setState({ searchResults: [] });
       this.setState({ currentPage: searchPage+1 });
       fetch(API_Search+this.state.searchQuery+'&page='+(this.state.currentPage+1))
         .then(response => response.json())
