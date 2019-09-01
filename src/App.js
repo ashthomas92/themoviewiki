@@ -19,8 +19,8 @@ function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-const API_Search = 'http://www.omdbapi.com/?apikey=b8353182&s=';
-const API_ID = 'http://www.omdbapi.com/?apikey=b8353182&plot=full&i=';
+const API_Search = 'https://www.omdbapi.com/?apikey=b8353182&s=';
+const API_ID = 'https://www.omdbapi.com/?apikey=b8353182&plot=full&i=';
 
 class App extends Component {
 
