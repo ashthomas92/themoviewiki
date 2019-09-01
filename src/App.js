@@ -223,7 +223,7 @@ class App extends Component {
           <div className="Movie-inner-wrapper">
             {this.state.movieInfo && this.state.movieInfo.map((item,index) => {
                 return <div key={index}> <div className="Movie-header">
-                    <img src={item.Poster} className="poster" alt={item.Title} /><h1>{item.Title}</h1><h2>({capitalizeFirstLetter(item.Type)} - {item.Year})</h2><p>{item.Plot}</p>
+                    <img src={item.Poster.replace('http://','https://')} className="poster" alt={item.Title} /><h1>{item.Title}</h1><h2>({capitalizeFirstLetter(item.Type)} - {item.Year})</h2><p>{item.Plot}</p>
                   </div>
                   <ul className="Movie-ratings">
                     {this.state.movieRatings && this.state.movieRatings.map((item,index) => {
